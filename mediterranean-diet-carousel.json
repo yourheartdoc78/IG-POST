@@ -1,0 +1,699 @@
+{
+  "carousel": {
+    "title": "Mediterranean Diet Deep Dive",
+    "platform": "Instagram",
+    "format": "carousel",
+    "dimensions": {
+      "width": 1080,
+      "height": 1080,
+      "unit": "px"
+    },
+    "slides": [
+      {
+        "slideNumber": 1,
+        "type": "title",
+        "background": {
+          "color": "#1B4332",
+          "overlay": "linear-gradient(135deg, #1B4332 0%, #2D6A4F 100%)"
+        },
+        "elements": [
+          {
+            "type": "text",
+            "content": "THE MEDITERRANEAN DIET",
+            "style": {
+              "fontFamily": "Playfair Display",
+              "fontSize": 52,
+              "fontWeight": "bold",
+              "color": "#FFFFFF",
+              "textAlign": "center",
+              "letterSpacing": 2
+            },
+            "position": { "x": "center", "y": 300 }
+          },
+          {
+            "type": "divider",
+            "style": {
+              "width": 120,
+              "height": 3,
+              "color": "#B7E4C7"
+            },
+            "position": { "x": "center", "y": 420 }
+          },
+          {
+            "type": "text",
+            "content": "A Cardiologist's Guide to\nHeart-Healthy Eating",
+            "style": {
+              "fontFamily": "Lato",
+              "fontSize": 28,
+              "fontWeight": "normal",
+              "color": "#B7E4C7",
+              "textAlign": "center",
+              "lineHeight": 1.5
+            },
+            "position": { "x": "center", "y": 460 }
+          },
+          {
+            "type": "text",
+            "content": "Swipe to learn more →",
+            "style": {
+              "fontFamily": "Lato",
+              "fontSize": 18,
+              "fontWeight": "normal",
+              "color": "#95D5B2",
+              "textAlign": "center"
+            },
+            "position": { "x": "center", "y": 900 }
+          }
+        ]
+      },
+      {
+        "slideNumber": 2,
+        "type": "content",
+        "heading": "What Is the Mediterranean Diet?",
+        "background": {
+          "color": "#FFFFFF"
+        },
+        "elements": [
+          {
+            "type": "text",
+            "content": "WHAT IS THE\nMEDITERRANEAN DIET?",
+            "style": {
+              "fontFamily": "Playfair Display",
+              "fontSize": 40,
+              "fontWeight": "bold",
+              "color": "#1B4332",
+              "textAlign": "left"
+            },
+            "position": { "x": 80, "y": 100 }
+          },
+          {
+            "type": "divider",
+            "style": {
+              "width": 80,
+              "height": 3,
+              "color": "#40916C"
+            },
+            "position": { "x": 80, "y": 240 }
+          },
+          {
+            "type": "text",
+            "content": "A way of eating inspired by the traditional cuisines of countries bordering the Mediterranean Sea — including Greece, Italy, and Spain.",
+            "style": {
+              "fontFamily": "Lato",
+              "fontSize": 22,
+              "color": "#333333",
+              "lineHeight": 1.6,
+              "textAlign": "left"
+            },
+            "position": { "x": 80, "y": 280 }
+          },
+          {
+            "type": "bulletList",
+            "items": [
+              "Ranked the #1 diet by U.S. News & World Report for 7+ years",
+              "Backed by decades of cardiovascular research",
+              "Not a short-term diet — it's a sustainable lifestyle",
+              "Emphasizes whole, minimally processed foods"
+            ],
+            "style": {
+              "fontFamily": "Lato",
+              "fontSize": 20,
+              "color": "#333333",
+              "bulletColor": "#40916C",
+              "lineHeight": 1.8
+            },
+            "position": { "x": 80, "y": 480 }
+          }
+        ]
+      },
+      {
+        "slideNumber": 3,
+        "type": "content",
+        "heading": "Heart Health Benefits",
+        "background": {
+          "color": "#F0FFF4"
+        },
+        "elements": [
+          {
+            "type": "icon",
+            "name": "heart",
+            "style": { "size": 48, "color": "#D62828" },
+            "position": { "x": 80, "y": 80 }
+          },
+          {
+            "type": "text",
+            "content": "PROVEN HEART\nHEALTH BENEFITS",
+            "style": {
+              "fontFamily": "Playfair Display",
+              "fontSize": 38,
+              "fontWeight": "bold",
+              "color": "#1B4332",
+              "textAlign": "left"
+            },
+            "position": { "x": 80, "y": 150 }
+          },
+          {
+            "type": "statCard",
+            "items": [
+              {
+                "stat": "30%",
+                "description": "reduction in major cardiovascular events (PREDIMED trial)",
+                "icon": "chart-down"
+              },
+              {
+                "stat": "25%",
+                "description": "lower risk of developing Type 2 diabetes",
+                "icon": "shield"
+              },
+              {
+                "stat": "↓ LDL",
+                "description": "lowers 'bad' cholesterol and reduces inflammation",
+                "icon": "trending-down"
+              }
+            ],
+            "style": {
+              "cardBackground": "#FFFFFF",
+              "cardBorder": "1px solid #B7E4C7",
+              "cardRadius": 12,
+              "statFontSize": 36,
+              "statColor": "#2D6A4F",
+              "descriptionFontSize": 16,
+              "descriptionColor": "#555555"
+            },
+            "position": { "x": 80, "y": 320 }
+          }
+        ]
+      },
+      {
+        "slideNumber": 4,
+        "type": "content",
+        "heading": "Key Foods to Eat Daily",
+        "background": {
+          "color": "#FFFFFF"
+        },
+        "elements": [
+          {
+            "type": "text",
+            "content": "EAT DAILY",
+            "style": {
+              "fontFamily": "Lato",
+              "fontSize": 16,
+              "fontWeight": "bold",
+              "color": "#40916C",
+              "letterSpacing": 4,
+              "textAlign": "center"
+            },
+            "position": { "x": "center", "y": 60 }
+          },
+          {
+            "type": "text",
+            "content": "Foundation Foods",
+            "style": {
+              "fontFamily": "Playfair Display",
+              "fontSize": 40,
+              "fontWeight": "bold",
+              "color": "#1B4332",
+              "textAlign": "center"
+            },
+            "position": { "x": "center", "y": 100 }
+          },
+          {
+            "type": "iconGrid",
+            "columns": 2,
+            "items": [
+              {
+                "icon": "🫒",
+                "label": "Extra Virgin Olive Oil",
+                "description": "Primary fat source — rich in polyphenols"
+              },
+              {
+                "icon": "🥬",
+                "label": "Vegetables",
+                "description": "Leafy greens, tomatoes, peppers, onions"
+              },
+              {
+                "icon": "🍇",
+                "label": "Fruits",
+                "description": "Whole fruits — berries, figs, citrus"
+              },
+              {
+                "icon": "🌾",
+                "label": "Whole Grains",
+                "description": "Farro, bulgur, whole wheat bread, brown rice"
+              },
+              {
+                "icon": "🥜",
+                "label": "Nuts & Seeds",
+                "description": "Almonds, walnuts, flaxseed, sesame"
+              },
+              {
+                "icon": "🫘",
+                "label": "Legumes",
+                "description": "Lentils, chickpeas, white beans"
+              }
+            ],
+            "style": {
+              "cardBackground": "#F8FFF8",
+              "cardRadius": 10,
+              "iconSize": 36,
+              "labelFont": "Lato",
+              "labelSize": 18,
+              "labelWeight": "bold",
+              "descriptionSize": 14,
+              "descriptionColor": "#666666"
+            },
+            "position": { "x": 60, "y": 200 }
+          }
+        ]
+      },
+      {
+        "slideNumber": 5,
+        "type": "content",
+        "heading": "Weekly & Moderate Foods",
+        "background": {
+          "color": "#FFF8F0"
+        },
+        "elements": [
+          {
+            "type": "text",
+            "content": "EAT IN MODERATION",
+            "style": {
+              "fontFamily": "Lato",
+              "fontSize": 16,
+              "fontWeight": "bold",
+              "color": "#E76F51",
+              "letterSpacing": 4,
+              "textAlign": "center"
+            },
+            "position": { "x": "center", "y": 60 }
+          },
+          {
+            "type": "text",
+            "content": "Weekly Staples",
+            "style": {
+              "fontFamily": "Playfair Display",
+              "fontSize": 40,
+              "fontWeight": "bold",
+              "color": "#1B4332",
+              "textAlign": "center"
+            },
+            "position": { "x": "center", "y": 100 }
+          },
+          {
+            "type": "frequencyList",
+            "items": [
+              {
+                "icon": "🐟",
+                "label": "Fish & Seafood",
+                "frequency": "2-3x per week",
+                "note": "Salmon, sardines, mackerel — high in omega-3s"
+              },
+              {
+                "icon": "🍗",
+                "label": "Poultry",
+                "frequency": "2-3x per week",
+                "note": "Chicken, turkey — grilled or baked"
+              },
+              {
+                "icon": "🥚",
+                "label": "Eggs",
+                "frequency": "3-4x per week",
+                "note": "Great protein source"
+              },
+              {
+                "icon": "🧀",
+                "label": "Cheese & Yogurt",
+                "frequency": "Daily in small amounts",
+                "note": "Greek yogurt, feta, Parmigiano-Reggiano"
+              }
+            ],
+            "style": {
+              "fontFamily": "Lato",
+              "labelSize": 20,
+              "frequencyColor": "#E76F51",
+              "frequencySize": 14,
+              "noteColor": "#666666"
+            },
+            "position": { "x": 80, "y": 200 }
+          },
+          {
+            "type": "callout",
+            "content": "Limit red meat to a few times per month.\nAvoid processed meats when possible.",
+            "style": {
+              "background": "#FDECEA",
+              "borderLeft": "4px solid #E76F51",
+              "fontSize": 16,
+              "color": "#333333",
+              "radius": 8
+            },
+            "position": { "x": 80, "y": 820 }
+          }
+        ]
+      },
+      {
+        "slideNumber": 6,
+        "type": "content",
+        "heading": "A Day on Your Plate",
+        "background": {
+          "color": "#FFFFFF"
+        },
+        "elements": [
+          {
+            "type": "text",
+            "content": "A DAY ON\nYOUR PLATE",
+            "style": {
+              "fontFamily": "Playfair Display",
+              "fontSize": 40,
+              "fontWeight": "bold",
+              "color": "#1B4332",
+              "textAlign": "center"
+            },
+            "position": { "x": "center", "y": 60 }
+          },
+          {
+            "type": "mealPlan",
+            "meals": [
+              {
+                "meal": "Breakfast",
+                "time": "7:30 AM",
+                "description": "Greek yogurt with walnuts, honey, and fresh berries",
+                "icon": "🌅"
+              },
+              {
+                "meal": "Lunch",
+                "time": "12:30 PM",
+                "description": "Grain bowl with quinoa, grilled vegetables, chickpeas, feta, and lemon-olive oil dressing",
+                "icon": "☀️"
+              },
+              {
+                "meal": "Snack",
+                "time": "3:30 PM",
+                "description": "Handful of almonds + an apple",
+                "icon": "🍎"
+              },
+              {
+                "meal": "Dinner",
+                "time": "7:00 PM",
+                "description": "Baked salmon with roasted tomatoes, asparagus, and a side of whole grain bread dipped in EVOO",
+                "icon": "🌙"
+              }
+            ],
+            "style": {
+              "cardBackground": "#F8FFF8",
+              "cardRadius": 12,
+              "mealFont": "Lato",
+              "mealSize": 20,
+              "mealWeight": "bold",
+              "timeColor": "#40916C",
+              "descriptionSize": 16,
+              "descriptionColor": "#444444"
+            },
+            "position": { "x": 60, "y": 200 }
+          }
+        ]
+      },
+      {
+        "slideNumber": 7,
+        "type": "content",
+        "heading": "Beyond Heart Health",
+        "background": {
+          "color": "#F0FFF4"
+        },
+        "elements": [
+          {
+            "type": "text",
+            "content": "BEYOND\nHEART HEALTH",
+            "style": {
+              "fontFamily": "Playfair Display",
+              "fontSize": 40,
+              "fontWeight": "bold",
+              "color": "#1B4332",
+              "textAlign": "center"
+            },
+            "position": { "x": "center", "y": 60 }
+          },
+          {
+            "type": "benefitCards",
+            "items": [
+              {
+                "icon": "🧠",
+                "title": "Brain Health",
+                "description": "Associated with reduced risk of Alzheimer's and cognitive decline"
+              },
+              {
+                "icon": "⚖️",
+                "title": "Weight Management",
+                "description": "Sustainable approach — no calorie counting or restriction"
+              },
+              {
+                "icon": "🦠",
+                "title": "Gut Health",
+                "description": "High fiber intake supports a diverse, healthy microbiome"
+              },
+              {
+                "icon": "🔥",
+                "title": "Anti-Inflammatory",
+                "description": "Rich in antioxidants and polyphenols that reduce chronic inflammation"
+              },
+              {
+                "icon": "😊",
+                "title": "Mental Well-Being",
+                "description": "Linked to lower rates of depression and improved mood"
+              }
+            ],
+            "style": {
+              "cardBackground": "#FFFFFF",
+              "cardBorder": "1px solid #D8F3DC",
+              "cardRadius": 10,
+              "titleFont": "Lato",
+              "titleSize": 18,
+              "titleWeight": "bold",
+              "titleColor": "#1B4332",
+              "descriptionSize": 14,
+              "descriptionColor": "#555555"
+            },
+            "position": { "x": 60, "y": 220 }
+          }
+        ]
+      },
+      {
+        "slideNumber": 8,
+        "type": "content",
+        "heading": "Common Myths Debunked",
+        "background": {
+          "color": "#FFFFFF"
+        },
+        "elements": [
+          {
+            "type": "text",
+            "content": "MYTHS vs. FACTS",
+            "style": {
+              "fontFamily": "Playfair Display",
+              "fontSize": 40,
+              "fontWeight": "bold",
+              "color": "#1B4332",
+              "textAlign": "center"
+            },
+            "position": { "x": "center", "y": 60 }
+          },
+          {
+            "type": "mythFact",
+            "items": [
+              {
+                "myth": "It's too expensive to follow",
+                "fact": "Beans, lentils, seasonal vegetables, and grains are among the most affordable foods available",
+                "mythIcon": "❌",
+                "factIcon": "✅"
+              },
+              {
+                "myth": "You have to drink wine",
+                "fact": "Wine is optional. The benefits come from the overall dietary pattern, not alcohol",
+                "mythIcon": "❌",
+                "factIcon": "✅"
+              },
+              {
+                "myth": "It's just about eating olive oil",
+                "fact": "It's a complete lifestyle — including physical activity, shared meals, and whole food variety",
+                "mythIcon": "❌",
+                "factIcon": "✅"
+              }
+            ],
+            "style": {
+              "mythBackground": "#FFF5F5",
+              "factBackground": "#F0FFF4",
+              "mythColor": "#C53030",
+              "factColor": "#2D6A4F",
+              "fontSize": 16,
+              "cardRadius": 10
+            },
+            "position": { "x": 60, "y": 180 }
+          }
+        ]
+      },
+      {
+        "slideNumber": 9,
+        "type": "content",
+        "heading": "Quick-Start Tips",
+        "background": {
+          "color": "#1B4332"
+        },
+        "elements": [
+          {
+            "type": "text",
+            "content": "START TODAY",
+            "style": {
+              "fontFamily": "Lato",
+              "fontSize": 16,
+              "fontWeight": "bold",
+              "color": "#95D5B2",
+              "letterSpacing": 4,
+              "textAlign": "center"
+            },
+            "position": { "x": "center", "y": 60 }
+          },
+          {
+            "type": "text",
+            "content": "5 Simple Swaps",
+            "style": {
+              "fontFamily": "Playfair Display",
+              "fontSize": 40,
+              "fontWeight": "bold",
+              "color": "#FFFFFF",
+              "textAlign": "center"
+            },
+            "position": { "x": "center", "y": 100 }
+          },
+          {
+            "type": "numberedList",
+            "items": [
+              "Swap butter for extra virgin olive oil",
+              "Replace white bread with whole grain",
+              "Snack on nuts instead of chips",
+              "Eat fish twice a week instead of red meat",
+              "Add a side salad to every dinner"
+            ],
+            "style": {
+              "numberColor": "#B7E4C7",
+              "numberSize": 32,
+              "textColor": "#FFFFFF",
+              "textSize": 20,
+              "fontFamily": "Lato",
+              "lineHeight": 2.0
+            },
+            "position": { "x": 100, "y": 220 }
+          },
+          {
+            "type": "text",
+            "content": "Small changes lead to lasting results.\nYou don't have to overhaul everything at once.",
+            "style": {
+              "fontFamily": "Lato",
+              "fontSize": 18,
+              "fontStyle": "italic",
+              "color": "#95D5B2",
+              "textAlign": "center",
+              "lineHeight": 1.6
+            },
+            "position": { "x": "center", "y": 820 }
+          }
+        ]
+      },
+      {
+        "slideNumber": 10,
+        "type": "cta",
+        "heading": "Call to Action",
+        "background": {
+          "color": "#2D6A4F",
+          "overlay": "linear-gradient(135deg, #1B4332 0%, #40916C 100%)"
+        },
+        "elements": [
+          {
+            "type": "text",
+            "content": "YOUR HEART\nDESERVES BETTER",
+            "style": {
+              "fontFamily": "Playfair Display",
+              "fontSize": 44,
+              "fontWeight": "bold",
+              "color": "#FFFFFF",
+              "textAlign": "center",
+              "lineHeight": 1.3
+            },
+            "position": { "x": "center", "y": 250 }
+          },
+          {
+            "type": "divider",
+            "style": {
+              "width": 120,
+              "height": 3,
+              "color": "#B7E4C7"
+            },
+            "position": { "x": "center", "y": 420 }
+          },
+          {
+            "type": "text",
+            "content": "Save this post for later\nShare it with someone you love ❤️",
+            "style": {
+              "fontFamily": "Lato",
+              "fontSize": 24,
+              "color": "#D8F3DC",
+              "textAlign": "center",
+              "lineHeight": 1.6
+            },
+            "position": { "x": "center", "y": 470 }
+          },
+          {
+            "type": "text",
+            "content": "Follow for more evidence-based\nheart health tips",
+            "style": {
+              "fontFamily": "Lato",
+              "fontSize": 20,
+              "color": "#95D5B2",
+              "textAlign": "center",
+              "lineHeight": 1.5
+            },
+            "position": { "x": "center", "y": 620 }
+          },
+          {
+            "type": "handle",
+            "content": "@yourheartdoc",
+            "style": {
+              "fontFamily": "Lato",
+              "fontSize": 28,
+              "fontWeight": "bold",
+              "color": "#FFFFFF",
+              "textAlign": "center"
+            },
+            "position": { "x": "center", "y": 780 }
+          }
+        ]
+      }
+    ],
+    "globalStyles": {
+      "primaryColor": "#1B4332",
+      "secondaryColor": "#2D6A4F",
+      "accentColor": "#40916C",
+      "lightAccent": "#B7E4C7",
+      "backgroundColor": "#FFFFFF",
+      "headingFont": "Playfair Display",
+      "bodyFont": "Lato",
+      "defaultTextColor": "#333333"
+    },
+    "metadata": {
+      "author": "@yourheartdoc",
+      "topic": "Mediterranean Diet",
+      "category": "Heart Health / Nutrition",
+      "hashtags": [
+        "#MediterraneanDiet",
+        "#HeartHealth",
+        "#Cardiology",
+        "#HealthyEating",
+        "#HeartHealthyFood",
+        "#NutritionTips",
+        "#EVOO",
+        "#PlantBased",
+        "#HealthyLifestyle",
+        "#CardiologistApproved"
+      ],
+      "caption": "The Mediterranean Diet isn't just a trend — it's one of the most researched and proven ways to protect your heart. 🫒\n\nAs a cardiologist, this is the eating pattern I recommend most. Here's everything you need to know to get started.\n\nSwipe through to learn:\n🫀 Proven heart health benefits\n🥗 What to eat daily & weekly\n🍽️ A full sample day of meals\n🧠 Benefits beyond the heart\n❌ Common myths debunked\n✅ 5 simple swaps to start today\n\nSave this post & share it with someone who could benefit!\n\n#MediterraneanDiet #HeartHealth #Cardiology #HealthyEating #HeartHealthyFood #NutritionTips #CardiologistApproved"
+    }
+  }
+}
