@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram Carousel Renderer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    color: #eee;
+    font-family: 'Lato', sans-serif;
+    padding: 40px 20px;
+  }
+
+  .toolbar {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .toolbar h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+  }
+
+  .toolbar-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  button {
+    background: #40916C;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover { background: #2D6A4F; }
+
+  button.secondary {
+    background: #333;
+    border: 1px solid #555;
+  }
+
+  button.secondary:hover { background: #444; }
+
+  .file-input-wrapper {
+    position: relative;
+  }
+
+  .file-input-wrapper input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .slides-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 32px;
+  }
+
+  .slide-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .slide-label {
+    font-size: 14px;
+    color: #888;
+  }
+
+  .slide-container {
+    width: 360px;
+    height: 360px;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .slide-container:hover { transform: scale(1.02); }
+
+  /* The actual 1080x1080 slide scaled down for preview */
+  .slide {
+    width: 1080px;
+    height: 1080px;
+    transform: scale(0.3333);
+    transform-origin: top left;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .slide-actions button {
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+
+  /* Modal for full-size preview */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal-content {
+    max-width: 90vmin;
+    max-height: 90vmin;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+  }
+
+  .modal-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* ========== SLIDE ELEMENT STYLES ========== */
+
+  .el-text {
+    position: absolute;
+    white-space: pre-line;
+    max-width: 920px;
+  }
+
+  .el-divider {
+    position: absolute;
+  }
+
+  .el-bullet-list {
+    position: absolute;
+    list-style: none;
+    max-width: 900px;
+  }
+
+  .el-bullet-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .el-bullet-list li::before {
+    content: '';
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 8px;
+  }
+
+  .el-stat-card-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 920px;
+  }
+
+  .el-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 24px 28px;
+  }
+
+  .el-stat-card .stat-value {
+    font-family: 'Playfair Display', serif;
+    flex-shrink: 0;
+    min-width: 100px;
+    text-align: center;
+  }
+
+  .el-icon-grid {
+    position: absolute;
+    display: grid;
+    gap: 20px;
+    width: 960px;
+  }
+
+  .el-icon-grid-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .el-icon-grid-item .grid-icon {
+    flex-shrink: 0;
+    font-size: 36px;
+    line-height: 1;
+  }
+
+  .el-frequency-list {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 920px;
+  }
+
+  .el-frequency-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .el-frequency-item:last-child { border-bottom: none; }
+
+  .el-frequency-item .freq-icon {
+    font-size: 40px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .el-meal-plan {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 960px;
+  }
+
+  .el-meal-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 24px;
+    border-radius: 12px;
+  }
+
+  .el-meal-card .meal-icon {
+    font-size: 36px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .el-benefit-cards {
+    position: absolute;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 960px;
+  }
+
+  .el-benefit-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px;
+  }
+
+  .el-benefit-card .benefit-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  /* Make last card span full width if odd count */
+  .el-benefit-cards .el-benefit-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .el-myth-fact-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 960px;
+  }
+
+  .el-myth-fact-pair {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .el-myth-row, .el-fact-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 18px 24px;
+  }
+
+  .el-myth-row .mf-icon, .el-fact-row .mf-icon {
+    flex-shrink: 0;
+    font-size: 20px;
+    line-height: 1.4;
+  }
+
+  .el-numbered-list {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 880px;
+  }
+
+  .el-numbered-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .el-numbered-item .num {
+    font-family: 'Playfair Display', serif;
+    flex-shrink: 0;
+    width: 50px;
+    text-align: center;
+  }
+
+  .el-callout {
+    position: absolute;
+    padding: 20px 24px;
+    max-width: 920px;
+  }
+
+  .el-handle {
+    position: absolute;
+  }
+
+  .el-icon {
+    position: absolute;
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <h1>Carousel Renderer</h1>
+  <div class="toolbar-actions">
+    <div class="file-input-wrapper">
+      <button class="secondary">Load JSON File</button>
+      <input type="file" accept=".json" id="fileInput">
+    </div>
+    <button onclick="downloadAll()">Download All Slides (PNG)</button>
+  </div>
+</div>
+
+<div class="slides-grid" id="slidesGrid"></div>
+
+<div class="modal-overlay" id="modal" onclick="closeModal()">
+  <div class="modal-content">
+    <img id="modalImg" src="" alt="Slide preview">
+  </div>
+</div>
+
+<script>
+let carouselData = null;
+
+// Load embedded JSON on start
+fetch('mediterranean-diet-carousel.json')
+  .then(r => r.json())
+  .then(data => { carouselData = data; renderAll(); })
+  .catch(() => console.log('No default JSON found. Use file input.'));
+
+document.getElementById('fileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      carouselData = JSON.parse(ev.target.result);
+      renderAll();
+    } catch (err) {
+      alert('Invalid JSON file');
+    }
+  };
+  reader.readAsText(file);
+});
+
+function renderAll() {
+  const grid = document.getElementById('slidesGrid');
+  grid.innerHTML = '';
+  const slides = carouselData.carousel.slides;
+
+  slides.forEach((slide, i) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'slide-wrapper';
+
+    const label = document.createElement('div');
+    label.className = 'slide-label';
+    label.textContent = `Slide ${slide.slideNumber} — ${slide.heading || slide.type}`;
+
+    const container = document.createElement('div');
+    container.className = 'slide-container';
+    container.onclick = () => previewSlide(i);
+
+    const slideEl = document.createElement('div');
+    slideEl.className = 'slide';
+    slideEl.id = `slide-${i}`;
+    applyBackground(slideEl, slide.background);
+    renderElements(slideEl, slide.elements);
+
+    container.appendChild(slideEl);
+
+    const actions = document.createElement('div');
+    actions.className = 'slide-actions';
+
+    const dlBtn = document.createElement('button');
+    dlBtn.textContent = 'Download PNG';
+    dlBtn.onclick = (e) => { e.stopPropagation(); downloadSlide(i, slide.slideNumber); };
+    actions.appendChild(dlBtn);
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(container);
+    wrapper.appendChild(actions);
+    grid.appendChild(wrapper);
+  });
+}
+
+function applyBackground(el, bg) {
+  if (!bg) return;
+  if (bg.color) el.style.backgroundColor = bg.color;
+  if (bg.overlay) el.style.backgroundImage = bg.overlay;
+}
+
+function px(v) { return typeof v === 'number' ? v + 'px' : v; }
+
+function positionElement(el, pos) {
+  if (!pos) return;
+  if (pos.x === 'center') {
+    el.style.left = '50%';
+    el.style.transform = 'translateX(-50%)';
+  } else {
+    el.style.left = px(pos.x);
+  }
+  el.style.top = px(pos.y);
+}
+
+function applyTextStyle(el, style) {
+  if (!style) return;
+  if (style.fontFamily) el.style.fontFamily = `'${style.fontFamily}', serif`;
+  if (style.fontSize) el.style.fontSize = px(style.fontSize);
+  if (style.fontWeight) el.style.fontWeight = style.fontWeight;
+  if (style.fontStyle) el.style.fontStyle = style.fontStyle;
+  if (style.color) el.style.color = style.color;
+  if (style.textAlign) el.style.textAlign = style.textAlign;
+  if (style.letterSpacing) el.style.letterSpacing = px(style.letterSpacing);
+  if (style.lineHeight) el.style.lineHeight = style.lineHeight;
+}
+
+function renderElements(parent, elements) {
+  if (!elements) return;
+  elements.forEach(el => {
+    switch (el.type) {
+      case 'text': renderText(parent, el); break;
+      case 'divider': renderDivider(parent, el); break;
+      case 'bulletList': renderBulletList(parent, el); break;
+      case 'statCard': renderStatCards(parent, el); break;
+      case 'iconGrid': renderIconGrid(parent, el); break;
+      case 'frequencyList': renderFrequencyList(parent, el); break;
+      case 'mealPlan': renderMealPlan(parent, el); break;
+      case 'benefitCards': renderBenefitCards(parent, el); break;
+      case 'mythFact': renderMythFact(parent, el); break;
+      case 'numberedList': renderNumberedList(parent, el); break;
+      case 'callout': renderCallout(parent, el); break;
+      case 'handle': renderHandle(parent, el); break;
+      case 'icon': renderIcon(parent, el); break;
+    }
+  });
+}
+
+function renderText(parent, el) {
+  const div = document.createElement('div');
+  div.className = 'el-text';
+  div.textContent = el.content;
+  applyTextStyle(div, el.style);
+  positionElement(div, el.position);
+  parent.appendChild(div);
+}
+
+function renderDivider(parent, el) {
+  const div = document.createElement('div');
+  div.className = 'el-divider';
+  div.style.width = px(el.style.width);
+  div.style.height = px(el.style.height);
+  div.style.backgroundColor = el.style.color;
+  positionElement(div, el.position);
+  parent.appendChild(div);
+}
+
+function renderBulletList(parent, el) {
+  const ul = document.createElement('ul');
+  ul.className = 'el-bullet-list';
+  applyTextStyle(ul, el.style);
+  positionElement(ul, el.position);
+
+  el.items.forEach(item => {
+    const li = document.createElement('li');
+    li.style.lineHeight = el.style.lineHeight || 1.8;
+    li.style.marginBottom = '12px';
+    li.innerHTML = `<span style="flex-shrink:0;width:10px;height:10px;border-radius:50%;background:${el.style.bulletColor || '#40916C'};margin-top:8px;display:inline-block;"></span><span>${item}</span>`;
+    // Override the ::before
+    li.style.listStyle = 'none';
+    ul.appendChild(li);
+  });
+
+  parent.appendChild(ul);
+}
+
+function renderStatCards(parent, el) {
+  const container = document.createElement('div');
+  container.className = 'el-stat-card-container';
+  positionElement(container, el.position);
+
+  el.items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'el-stat-card';
+    card.style.backgroundColor = el.style.cardBackground || '#fff';
+    card.style.border = el.style.cardBorder || 'none';
+    card.style.borderRadius = px(el.style.cardRadius || 12);
+
+    const stat = document.createElement('div');
+    stat.className = 'stat-value';
+    stat.textContent = item.stat;
+    stat.style.fontSize = px(el.style.statFontSize || 36);
+    stat.style.color = el.style.statColor || '#2D6A4F';
+    stat.style.fontWeight = 'bold';
+
+    const desc = document.createElement('div');
+    desc.textContent = item.description;
+    desc.style.fontSize = px(el.style.descriptionFontSize || 16);
+    desc.style.color = el.style.descriptionColor || '#555';
+    desc.style.fontFamily = "'Lato', sans-serif";
+    desc.style.lineHeight = '1.4';
+
+    card.appendChild(stat);
+    card.appendChild(desc);
+    container.appendChild(card);
+  });
+
+  parent.appendChild(container);
+}
+
+function renderIconGrid(parent, el) {
+  const grid = document.createElement('div');
+  grid.className = 'el-icon-grid';
+  grid.style.gridTemplateColumns = `repeat(${el.columns || 2}, 1fr)`;
+  positionElement(grid, el.position);
+
+  el.items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'el-icon-grid-item';
+    card.style.backgroundColor = el.style.cardBackground || '#F8FFF8';
+    card.style.borderRadius = px(el.style.cardRadius || 10);
+
+    const icon = document.createElement('span');
+    icon.className = 'grid-icon';
+    icon.textContent = item.icon;
+    icon.style.fontSize = px(el.style.iconSize || 36);
+
+    const info = document.createElement('div');
+
+    const label = document.createElement('div');
+    label.textContent = item.label;
+    label.style.fontFamily = `'${el.style.labelFont || 'Lato'}', sans-serif`;
+    label.style.fontSize = px(el.style.labelSize || 18);
+    label.style.fontWeight = el.style.labelWeight || 'bold';
+    label.style.color = '#1B4332';
+    label.style.marginBottom = '4px';
+
+    const desc = document.createElement('div');
+    desc.textContent = item.description;
+    desc.style.fontSize = px(el.style.descriptionSize || 14);
+    desc.style.color = el.style.descriptionColor || '#666';
+    desc.style.lineHeight = '1.4';
+
+    info.appendChild(label);
+    info.appendChild(desc);
+    card.appendChild(icon);
+    card.appendChild(info);
+    grid.appendChild(card);
+  });
+
+  parent.appendChild(grid);
+}
+
+function renderFrequencyList(parent, el) {
+  const list = document.createElement('div');
+  list.className = 'el-frequency-list';
+  positionElement(list, el.position);
+
+  el.items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'el-frequency-item';
+
+    const icon = document.createElement('span');
+    icon.className = 'freq-icon';
+    icon.textContent = item.icon;
+
+    const info = document.createElement('div');
+    info.style.flex = '1';
+
+    const top = document.createElement('div');
+    top.style.display = 'flex';
+    top.style.justifyContent = 'space-between';
+    top.style.alignItems = 'baseline';
+    top.style.marginBottom = '6px';
+
+    const label = document.createElement('span');
+    label.textContent = item.label;
+    label.style.fontFamily = `'${el.style.fontFamily || 'Lato'}', sans-serif`;
+    label.style.fontSize = px(el.style.labelSize || 20);
+    label.style.fontWeight = 'bold';
+    label.style.color = '#1B4332';
+
+    const freq = document.createElement('span');
+    freq.textContent = item.frequency;
+    freq.style.fontSize = px(el.style.frequencySize || 14);
+    freq.style.color = el.style.frequencyColor || '#E76F51';
+    freq.style.fontWeight = 'bold';
+
+    top.appendChild(label);
+    top.appendChild(freq);
+
+    const note = document.createElement('div');
+    note.textContent = item.note;
+    note.style.fontSize = '16px';
+    note.style.color = el.style.noteColor || '#666';
+    note.style.lineHeight = '1.4';
+
+    info.appendChild(top);
+    info.appendChild(note);
+    row.appendChild(icon);
+    row.appendChild(info);
+    list.appendChild(row);
+  });
+
+  parent.appendChild(list);
+}
+
+function renderMealPlan(parent, el) {
+  const container = document.createElement('div');
+  container.className = 'el-meal-plan';
+  positionElement(container, el.position);
+
+  el.meals.forEach(meal => {
+    const card = document.createElement('div');
+    card.className = 'el-meal-card';
+    card.style.backgroundColor = el.style.cardBackground || '#F8FFF8';
+    card.style.borderRadius = px(el.style.cardRadius || 12);
+
+    const icon = document.createElement('span');
+    icon.className = 'meal-icon';
+    icon.textContent = meal.icon;
+
+    const info = document.createElement('div');
+    info.style.flex = '1';
+
+    const top = document.createElement('div');
+    top.style.display = 'flex';
+    top.style.justifyContent = 'space-between';
+    top.style.alignItems = 'baseline';
+    top.style.marginBottom = '8px';
+
+    const name = document.createElement('span');
+    name.textContent = meal.meal;
+    name.style.fontFamily = `'${el.style.mealFont || 'Lato'}', sans-serif`;
+    name.style.fontSize = px(el.style.mealSize || 20);
+    name.style.fontWeight = el.style.mealWeight || 'bold';
+    name.style.color = '#1B4332';
+
+    const time = document.createElement('span');
+    time.textContent = meal.time;
+    time.style.color = el.style.timeColor || '#40916C';
+    time.style.fontSize = '16px';
+    time.style.fontWeight = 'bold';
+
+    top.appendChild(name);
+    top.appendChild(time);
+
+    const desc = document.createElement('div');
+    desc.textContent = meal.description;
+    desc.style.fontSize = px(el.style.descriptionSize || 16);
+    desc.style.color = el.style.descriptionColor || '#444';
+    desc.style.lineHeight = '1.4';
+
+    info.appendChild(top);
+    info.appendChild(desc);
+    card.appendChild(icon);
+    card.appendChild(info);
+    container.appendChild(card);
+  });
+
+  parent.appendChild(container);
+}
+
+function renderBenefitCards(parent, el) {
+  const grid = document.createElement('div');
+  grid.className = 'el-benefit-cards';
+  positionElement(grid, el.position);
+
+  el.items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'el-benefit-card';
+    card.style.backgroundColor = el.style.cardBackground || '#fff';
+    card.style.border = el.style.cardBorder || 'none';
+    card.style.borderRadius = px(el.style.cardRadius || 10);
+
+    const icon = document.createElement('span');
+    icon.className = 'benefit-icon';
+    icon.textContent = item.icon;
+
+    const info = document.createElement('div');
+
+    const title = document.createElement('div');
+    title.textContent = item.title;
+    title.style.fontFamily = `'${el.style.titleFont || 'Lato'}', sans-serif`;
+    title.style.fontSize = px(el.style.titleSize || 18);
+    title.style.fontWeight = el.style.titleWeight || 'bold';
+    title.style.color = el.style.titleColor || '#1B4332';
+    title.style.marginBottom = '6px';
+
+    const desc = document.createElement('div');
+    desc.textContent = item.description;
+    desc.style.fontSize = px(el.style.descriptionSize || 14);
+    desc.style.color = el.style.descriptionColor || '#555';
+    desc.style.lineHeight = '1.4';
+
+    info.appendChild(title);
+    info.appendChild(desc);
+    card.appendChild(icon);
+    card.appendChild(info);
+    grid.appendChild(card);
+  });
+
+  parent.appendChild(grid);
+}
+
+function renderMythFact(parent, el) {
+  const container = document.createElement('div');
+  container.className = 'el-myth-fact-container';
+  positionElement(container, el.position);
+
+  el.items.forEach(item => {
+    const pair = document.createElement('div');
+    pair.className = 'el-myth-fact-pair';
+
+    const mythRow = document.createElement('div');
+    mythRow.className = 'el-myth-row';
+    mythRow.style.backgroundColor = el.style.mythBackground || '#FFF5F5';
+
+    const mythIcon = document.createElement('span');
+    mythIcon.className = 'mf-icon';
+    mythIcon.textContent = item.mythIcon || '❌';
+
+    const mythText = document.createElement('div');
+    mythText.style.flex = '1';
+
+    const mythLabel = document.createElement('div');
+    mythLabel.textContent = 'MYTH';
+    mythLabel.style.fontSize = '12px';
+    mythLabel.style.fontWeight = 'bold';
+    mythLabel.style.color = el.style.mythColor || '#C53030';
+    mythLabel.style.letterSpacing = '2px';
+    mythLabel.style.marginBottom = '4px';
+
+    const mythContent = document.createElement('div');
+    mythContent.textContent = item.myth;
+    mythContent.style.fontSize = px(el.style.fontSize || 16);
+    mythContent.style.color = '#333';
+    mythContent.style.fontWeight = 'bold';
+
+    mythText.appendChild(mythLabel);
+    mythText.appendChild(mythContent);
+    mythRow.appendChild(mythIcon);
+    mythRow.appendChild(mythText);
+
+    const factRow = document.createElement('div');
+    factRow.className = 'el-fact-row';
+    factRow.style.backgroundColor = el.style.factBackground || '#F0FFF4';
+
+    const factIcon = document.createElement('span');
+    factIcon.className = 'mf-icon';
+    factIcon.textContent = item.factIcon || '✅';
+
+    const factText = document.createElement('div');
+    factText.style.flex = '1';
+
+    const factLabel = document.createElement('div');
+    factLabel.textContent = 'FACT';
+    factLabel.style.fontSize = '12px';
+    factLabel.style.fontWeight = 'bold';
+    factLabel.style.color = el.style.factColor || '#2D6A4F';
+    factLabel.style.letterSpacing = '2px';
+    factLabel.style.marginBottom = '4px';
+
+    const factContent = document.createElement('div');
+    factContent.textContent = item.fact;
+    factContent.style.fontSize = px(el.style.fontSize || 16);
+    factContent.style.color = '#333';
+    factContent.style.lineHeight = '1.4';
+
+    factText.appendChild(factLabel);
+    factText.appendChild(factContent);
+    factRow.appendChild(factIcon);
+    factRow.appendChild(factText);
+
+    pair.appendChild(mythRow);
+    pair.appendChild(factRow);
+    container.appendChild(pair);
+  });
+
+  parent.appendChild(container);
+}
+
+function renderNumberedList(parent, el) {
+  const list = document.createElement('div');
+  list.className = 'el-numbered-list';
+  positionElement(list, el.position);
+
+  el.items.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'el-numbered-item';
+    row.style.lineHeight = el.style.lineHeight || 2.0;
+
+    const num = document.createElement('span');
+    num.className = 'num';
+    num.textContent = `${i + 1}`;
+    num.style.color = el.style.numberColor || '#B7E4C7';
+    num.style.fontSize = px(el.style.numberSize || 32);
+    num.style.fontWeight = 'bold';
+
+    const text = document.createElement('span');
+    text.textContent = item;
+    text.style.color = el.style.textColor || '#fff';
+    text.style.fontSize = px(el.style.textSize || 20);
+    text.style.fontFamily = `'${el.style.fontFamily || 'Lato'}', sans-serif`;
+
+    row.appendChild(num);
+    row.appendChild(text);
+    list.appendChild(row);
+  });
+
+  parent.appendChild(list);
+}
+
+function renderCallout(parent, el) {
+  const div = document.createElement('div');
+  div.className = 'el-callout';
+  div.textContent = el.content;
+  div.style.backgroundColor = el.style.background || '#FDECEA';
+  div.style.borderLeft = el.style.borderLeft || '4px solid #E76F51';
+  div.style.fontSize = px(el.style.fontSize || 16);
+  div.style.color = el.style.color || '#333';
+  div.style.borderRadius = px(el.style.radius || 8);
+  div.style.lineHeight = '1.5';
+  div.style.whiteSpace = 'pre-line';
+  positionElement(div, el.position);
+  parent.appendChild(div);
+}
+
+function renderHandle(parent, el) {
+  const div = document.createElement('div');
+  div.className = 'el-handle';
+  div.textContent = el.content;
+  applyTextStyle(div, el.style);
+  positionElement(div, el.position);
+  parent.appendChild(div);
+}
+
+function renderIcon(parent, el) {
+  const div = document.createElement('div');
+  div.className = 'el-icon';
+  // Render as a simple colored symbol
+  const iconMap = { heart: '❤️', 'chart-down': '📉', shield: '🛡️', 'trending-down': '📉' };
+  div.textContent = iconMap[el.name] || '●';
+  div.style.fontSize = px(el.style.size || 48);
+  div.style.lineHeight = '1';
+  positionElement(div, el.position);
+  parent.appendChild(div);
+}
+
+// === Download functions ===
+
+async function captureSlide(index) {
+  const slideEl = document.getElementById(`slide-${index}`);
+  // Temporarily remove the scale transform for capture
+  slideEl.style.transform = 'none';
+  const canvas = await html2canvas(slideEl, {
+    width: 1080,
+    height: 1080,
+    scale: 1,
+    useCORS: true,
+    backgroundColor: null,
+  });
+  slideEl.style.transform = 'scale(0.3333)';
+  return canvas;
+}
+
+async function downloadSlide(index, slideNumber) {
+  const canvas = await captureSlide(index);
+  const link = document.createElement('a');
+  link.download = `slide-${slideNumber}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+async function downloadAll() {
+  const slides = carouselData.carousel.slides;
+  for (let i = 0; i < slides.length; i++) {
+    await downloadSlide(i, slides[i].slideNumber);
+    // Small delay between downloads
+    await new Promise(r => setTimeout(r, 300));
+  }
+}
+
+async function previewSlide(index) {
+  const canvas = await captureSlide(index);
+  document.getElementById('modalImg').src = canvas.toDataURL('image/png');
+  document.getElementById('modal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+
+</body>
+</html>
